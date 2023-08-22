@@ -21,20 +21,21 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ account }) {
+    async signIn({ account, user }) {
       switch (account?.provider) {
         case 'google':
           const registerResponse = await registerViaGoogle(
-            account.id_token as string
+            account.id_token as string,
+            { viaGoogle: true, email: user.email as string }
           );
+
+          console.log(registerResponse);
 
           if (!registerResponse) {
             return '/unauthorized';
           }
 
-          const loginResponse = await login(registerResponse);
-
-          console.log('LOGIN RES: ' + loginResponse);
+          const loginResponse = await login({ email: registerResponse.email });
 
           if (!loginResponse) {
             return '/unauthorized';
@@ -83,10 +84,13 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      const user = await whoAmI(token.access_token);
+      const company = await whoAmI(token.access_token);
 
-      if (user) {
-        session.user = { ...user, name: user.username, image: user.picture };
+      if (company) {
+        session.user = {
+          ...company,
+          image: company.picture,
+        };
       }
 
       return session;

@@ -1,24 +1,31 @@
 import { Tokens } from 'types/Tokens';
-import { User, UserCredentials } from 'types/User';
+import { Company, CompanyCredentials } from 'types/User';
 
 import api from '../ky';
 
 export async function registerViaGoogle(
-  tokenId: string
-): Promise<UserCredentials | false> {
-  const registerResponse = await api.get('auth/register/google', {
-    headers: { Authorization: `Bearer ${tokenId}` },
+  tokenId: string,
+  creds: Omit<CompanyCredentials, 'id'>
+): Promise<Company | false> {
+  const registerResponse = await api.post('auth/register', {
+    headers: {
+      Authorization: `Bearer ${tokenId}`,
+      'content-type': 'application/json',
+    },
+    json: {
+      ...creds,
+    },
   });
 
-  if (!registerResponse.ok || registerResponse.status !== 201) {
+  if (registerResponse.status !== 200 && registerResponse.status !== 201) {
     return false;
   }
 
-  return await registerResponse.json<UserCredentials>();
+  return await registerResponse.json<Company>();
 }
 
 export async function login(
-  credentials: UserCredentials
+  credentials: Omit<CompanyCredentials, 'id' | 'viaGoogle'>
 ): Promise<Tokens | false> {
   const response = await api.post('auth/login', {
     body: JSON.stringify(credentials),
@@ -48,8 +55,8 @@ export async function refresh(refreshToken: string): Promise<Tokens | false> {
   return await response.json<Tokens>();
 }
 
-export async function whoAmI(accessToken: string): Promise<User | false> {
-  const response = await api.get('auth/whoAmI', {
+export async function whoAmI(accessToken: string): Promise<Company | false> {
+  const response = await api.get('auth/whoami', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
@@ -57,5 +64,5 @@ export async function whoAmI(accessToken: string): Promise<User | false> {
     return false;
   }
 
-  return await response.json<User>();
+  return await response.json<Company>();
 }

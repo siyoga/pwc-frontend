@@ -1,6 +1,4 @@
 import './globals.css';
-
-import NextAuthProvider from 'providers/NextAuthProvider';
 import UserMenu from 'ui/UserMenu';
 
 import type { Metadata } from 'next';
@@ -27,7 +25,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="flex flex-row items-center justify-between px-12 py-8 w-full">
+        <header className="absolute flex flex-row items-center justify-between px-12 py-8 w-full">
           <span>Frontend Boilerplate</span>
           {!session ? (
             <span>
@@ -42,7 +40,11 @@ export default async function RootLayout({
             <UserMenu session={session} />
           )}
         </header>
-        <main>{children}</main>
+        <main className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 h-screen">
+            {children}
+          </div>
+        </main>
       </body>
     </html>
   );
