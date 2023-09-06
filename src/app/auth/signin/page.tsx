@@ -1,8 +1,8 @@
 import { authOptions } from 'app/api/auth/[...nextauth]/route';
+import Error from 'app/error';
 import LogoStore from 'store/LogoStore';
-import Input from 'ui/components/Input';
 import SignInButton from 'ui/components/SignInButton';
-import RegisterFlow from 'ui/RegisterFlow';
+import { RegisterFormWrapper } from 'ui/forms/RegisterForm/RegisterFormWrapper';
 
 import Image from 'next/image';
 import { getServerSession } from 'next-auth';
@@ -14,8 +14,11 @@ export default async function SignIn() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
+      <h1 className="text-4xl font-bold text-center mb-12">
+        Создайте страницу вашей компании
+      </h1>
       {session && session.user.name === '' ? (
-        <RegisterFlow />
+        <RegisterFormWrapper />
       ) : (
         <div>
           {providers ? (
@@ -26,7 +29,7 @@ export default async function SignIn() {
                   src={LogoStore[`${provider.id}`]}
                   className="w-8"
                 />
-                {`Sign in with ${provider.name}`}
+                {`Войти с ${provider.name}`}
               </SignInButton>
             ))
           ) : (

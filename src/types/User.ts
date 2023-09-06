@@ -5,7 +5,7 @@ interface User {
   id: string;
   email: string;
   name: string | null;
-  picture: string | null;
+  image: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -17,8 +17,14 @@ export interface Company extends User {
   cards: Card[] | null;
 }
 
+export interface CompanyUpdatableParams {
+  link: string;
+  name: string;
+  image: string;
+}
+
 export interface CompanyCredentials
-  extends Omit<User, 'picture' | 'createdAt' | 'updatedAt' | 'name'> {
+  extends Omit<User, 'image' | 'createdAt' | 'updatedAt' | 'name'> {
   password?: string;
   viaGoogle: boolean;
 }

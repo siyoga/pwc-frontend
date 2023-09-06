@@ -2,7 +2,6 @@ import { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import NextAuth from 'next-auth/next';
 import GoogleProvider from 'next-auth/providers/google';
-import { use } from 'react';
 
 import { login, refresh, registerViaGoogle, whoAmI } from '../auth';
 
@@ -29,8 +28,6 @@ export const authOptions: NextAuthOptions = {
             { viaGoogle: true, email: user.email as string }
           );
 
-          console.log(registerResponse);
-
           if (!registerResponse) {
             return '/unauthorized';
           }
@@ -52,10 +49,11 @@ export const authOptions: NextAuthOptions = {
       }
     },
 
-    async jwt({ account, token }) {
+    async jwt({ account, token, user }) {
       if (account) {
         return {
           access_token: account.access_token,
+          picture: user.image,
           expires_at: Math.floor(
             Date.now() / 1000 + (account.expires_at as number)
           ),
@@ -89,7 +87,8 @@ export const authOptions: NextAuthOptions = {
       if (company) {
         session.user = {
           ...company,
-          image: company.picture,
+          accessToken: token.access_token,
+          image: company.image as string | null,
         };
       }
 

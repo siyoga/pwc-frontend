@@ -13,6 +13,7 @@ export default function SignInButton({ provider, ref, ...props }: Props) {
   return (
     <Button
       onClick={() => {
+        localStorage.clear();
         signIn(provider.id);
       }}
       variant={provider.id as 'google'}

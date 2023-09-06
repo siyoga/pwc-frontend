@@ -1,9 +1,8 @@
 'use client';
 
-import userIcon from 'assets/user.svg';
-
 import { Menu, Transition } from '@headlessui/react';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
+import userIcon from 'assets/user.svg';
 import Image from 'next/image';
 import type { Session } from 'next-auth';
 import { Fragment } from 'react';

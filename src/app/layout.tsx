@@ -33,7 +33,7 @@ export default async function RootLayout({
                 href={'/auth/signin'}
                 className="bg-black rounded-lg px-6 py-3 text-white"
               >
-                Sign In
+                Вход
               </Link>
             </span>
           ) : (
