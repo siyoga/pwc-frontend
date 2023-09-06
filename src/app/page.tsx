@@ -1,5 +1,14 @@
-import Image from 'next/image';
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 
-export default function Home() {
-  return <div>Privet</div>;
+import { authOptions } from './api/auth/[...nextauth]/route';
+
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.name === '') {
+    redirect('/auth/signin');
+  }
+
+  return <p>Привет</p>;
 }

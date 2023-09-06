@@ -1,29 +1,51 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { cn } from 'utils';
 
-export interface ButtonProps {
-  onClick: () => void;
-  children: ReactNode;
-  disabled: boolean;
-  className: string;
-}
+import type { VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
+import { forwardRef, type ComponentProps, type ReactNode } from 'react';
 
-export default function Button({
-  children,
-  onClick,
-  disabled,
-  className,
-}: Omit<Partial<ButtonProps>, 'provider'>) {
-  return (
+const buttonVariants = cva(
+  'rounded-lg flex flex-row items-center justify-between gap-3 font-semibold transition duration-300 px-7 py-3 my-4 disabled:opacity-60',
+  {
+    variants: {
+      variant: {
+        default:
+          'bg-black text-white hover:bg-gray-900 disabled:hover:bg-black',
+        google:
+          'bg-red-400 text-white hover:bg-red-500 disabled:hover:bg-red-400',
+      },
+
+      size: {
+        lg: 'text-lg',
+        md: 'text-md',
+        sm: 'text-sm',
+      },
+    },
+
+    defaultVariants: {
+      variant: 'default',
+      size: 'lg',
+    },
+  }
+);
+
+interface ButtonProps
+  extends Omit<ComponentProps<'button'>, 'className'>,
+    VariantProps<typeof buttonVariants> {}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant, size, ...props }, ref) => (
     <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`rounded-lg flex flex-row items-center justify-between${
-        className ? ` ${className}` : ''
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
+      ref={ref}
+      {...props}
+      className={cn(buttonVariants({ variant, size }))}
+    />
+  )
+);
+
+Button.displayName = 'Button';
+
+export { buttonVariants, Button };
+export type { ButtonProps };

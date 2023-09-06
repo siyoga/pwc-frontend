@@ -2,7 +2,6 @@ import { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import NextAuth from 'next-auth/next';
 import GoogleProvider from 'next-auth/providers/google';
-import { use } from 'react';
 
 import { login, refresh, registerViaGoogle, whoAmI } from '../auth';
 
@@ -21,20 +20,19 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ account }) {
+    async signIn({ account, user }) {
       switch (account?.provider) {
         case 'google':
           const registerResponse = await registerViaGoogle(
-            account.id_token as string
+            account.id_token as string,
+            { viaGoogle: true, email: user.email as string }
           );
 
           if (!registerResponse) {
             return '/unauthorized';
           }
 
-          const loginResponse = await login(registerResponse);
-
-          console.log('LOGIN RES: ' + loginResponse);
+          const loginResponse = await login({ email: registerResponse.email });
 
           if (!loginResponse) {
             return '/unauthorized';
@@ -51,10 +49,11 @@ export const authOptions: NextAuthOptions = {
       }
     },
 
-    async jwt({ account, token }) {
+    async jwt({ account, token, user }) {
       if (account) {
         return {
           access_token: account.access_token,
+          picture: user.image,
           expires_at: Math.floor(
             Date.now() / 1000 + (account.expires_at as number)
           ),
@@ -83,10 +82,14 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      const user = await whoAmI(token.access_token);
+      const company = await whoAmI(token.access_token);
 
-      if (user) {
-        session.user = { ...user, name: user.username, image: user.picture };
+      if (company) {
+        session.user = {
+          ...company,
+          accessToken: token.access_token,
+          image: company.image as string | null,
+        };
       }
 
       return session;

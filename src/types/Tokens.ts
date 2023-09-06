@@ -4,3 +4,8 @@ export interface Tokens {
   iat: number;
   exp: number;
 }
+
+export interface RefreshToken {
+  companyId: string;
+  rtToken: string;
+}
