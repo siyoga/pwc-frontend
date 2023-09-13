@@ -7,14 +7,15 @@ import { cva } from 'class-variance-authority';
 import { forwardRef, type ComponentProps, type ReactNode } from 'react';
 
 const buttonVariants = cva(
-  'rounded-lg flex flex-row items-center justify-between gap-3 font-semibold transition duration-300 px-7 py-3 my-4 disabled:opacity-60',
+  'flex flex-row items-center justify-between gap-3 font-semibold transition duration-300 disabled:opacity-60',
   {
     variants: {
       variant: {
         default:
-          'bg-black text-white hover:bg-gray-900 disabled:hover:bg-black',
+          'bg-black text-white hover:bg-gray-900 disabled:hover:bg-black px-7 py-3 my-4 rounded-lg',
         google:
-          'bg-red-400 text-white hover:bg-red-500 disabled:hover:bg-red-400',
+          'bg-red-400 text-white hover:bg-red-500 disabled:hover:bg-red-400 px-7 py-3 my-4 rounded-lg',
+        image: `bg-transparent rounded-full`,
       },
 
       size: {

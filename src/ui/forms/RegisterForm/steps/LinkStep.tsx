@@ -56,6 +56,7 @@ export default function LinkStep({ onNext }: Props) {
       })}
     >
       <Input
+        type="url"
         ref={linkRef}
         placeholder={form.steps.link.placeholder}
         {...linkControl}

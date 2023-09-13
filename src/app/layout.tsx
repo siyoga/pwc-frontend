@@ -1,4 +1,5 @@
 import './globals.css';
+import { NextAuthProvider } from 'providers/NextAuthProvider';
 import UserMenu from 'ui/UserMenu';
 
 import type { Metadata } from 'next';
@@ -41,8 +42,8 @@ export default async function RootLayout({
           )}
         </header>
         <main className="flex flex-col justify-center items-center">
-          <div className="flex flex-col justify-center items-center w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 h-screen">
-            {children}
+          <div className="flex flex-col justify-center items-center w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 h-screen px-3 md:px-0">
+            <NextAuthProvider>{children}</NextAuthProvider>
           </div>
         </main>
       </body>

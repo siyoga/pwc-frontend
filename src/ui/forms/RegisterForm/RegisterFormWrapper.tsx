@@ -11,10 +11,8 @@ export function RegisterFormWrapper() {
   const [form, setForm] = useState(FORM_STATE);
 
   return (
-    <NextAuthProvider>
-      <RegisterFormContext.Provider value={{ form, setForm }}>
-        <RegisterForm />
-      </RegisterFormContext.Provider>
-    </NextAuthProvider>
+    <RegisterFormContext.Provider value={{ form, setForm }}>
+      <RegisterForm />
+    </RegisterFormContext.Provider>
   );
 }

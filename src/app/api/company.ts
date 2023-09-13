@@ -25,14 +25,26 @@ export async function updateCompanyInfo(
   newInfo: CompanyUpdatableParams,
   accessToken: string
 ): Promise<Company | false> {
-  console.log('info body: ' + newInfo);
-
   const response = await api.post('company/update', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       'content-type': 'application/json',
     },
     body: JSON.stringify(newInfo),
+  });
+
+  if (!response.ok) {
+    return false;
+  }
+
+  return await response.json<Company>();
+}
+
+export async function getCompanyInfo(id: string): Promise<Company | false> {
+  const response = await api.get('company/get', {
+    searchParams: {
+      id: id,
+    },
   });
 
   if (!response.ok) {

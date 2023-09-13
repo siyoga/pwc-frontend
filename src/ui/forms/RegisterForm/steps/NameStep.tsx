@@ -53,6 +53,7 @@ export default function NameStep({ onNext }: Props) {
       })}
     >
       <Input
+        type="text"
         ref={nameRef}
         placeholder={form.steps.name.placeholder}
         {...nameControl}

@@ -67,7 +67,7 @@ export default function RegisterForm() {
     setCompleteStatus('idle');
     update();
 
-    router.push('/');
+    router.push(`/company/${response.id}`);
   }, [form, data?.user.accessToken, update, router]);
 
   useEffect(() => {
@@ -89,8 +89,6 @@ export default function RegisterForm() {
           const isComplete = Object.values(form.steps)
             .splice(index, 1)
             .every((step) => step.value !== '' && step.valid);
-
-          console.log(isComplete);
 
           return (
             // Вынести в отдельный компонент
