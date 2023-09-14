@@ -9,7 +9,7 @@ export async function uploadCompanyLogo(
   const imageInfo = new FormData();
   imageInfo.append('companyLogo', image);
 
-  const response = await api.post('company/uploadLogo', {
+  const response = await api.post('company/logo/upload', {
     headers: { Authorization: `Bearer ${accessToken}` },
     body: imageInfo,
   });
@@ -41,15 +41,19 @@ export async function updateCompanyInfo(
 }
 
 export async function getCompanyInfo(id: string): Promise<Company | false> {
-  const response = await api.get('company/get', {
-    searchParams: {
-      id: id,
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/company/get?` +
+      new URLSearchParams({
+        id: id,
+      }),
+    {
+      method: 'GET',
+    }
+  );
 
-  if (!response.ok) {
+  if (response.status !== 200) {
     return false;
   }
 
-  return await response.json<Company>();
+  return await response.json();
 }

@@ -1,7 +1,10 @@
 'use client';
 
+import { createCard, uploadCardLogo } from 'app/api/card';
+import { getCompanyInfo } from 'app/api/company';
 import { NextAuthProvider } from 'providers/NextAuthProvider';
 import documentSvg from 'public/document.svg';
+import LoadingIcon from 'public/LoadingIcon';
 import { Button } from 'ui/components/Button';
 
 import {
@@ -9,58 +12,64 @@ import {
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import uuid from 'react-uuid';
 
 export default function CreateCard() {
-  const [logo, setLogo] = useState<File>();
-  const [desc, setDesc] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm({
     shouldUseNativeValidation: false,
   });
-  const { data } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  if (status === 'unauthenticated') {
+    return <p>Войдите в систему...</p>;
+  }
 
   return (
     <form
       className="w-full flex flex-col justify-center items-center"
-      onSubmit={handleSubmit((data) => {
-        console.log(data);
+      onSubmit={handleSubmit(async (data) => {
+        setIsLoading(true);
+        const createResponse = await createCard(
+          data.name,
+          data.url,
+          '',
+          data.description,
+          data.price,
+          session?.user.accessToken as string
+        );
+
+        if (!createResponse) {
+          setError('name', {
+            type: 'custom',
+            message: 'Что-то пошло не так...',
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        if ('text' in createResponse) {
+          setError('name', { type: 'custom', message: createResponse.text });
+          setIsLoading(false);
+          return;
+        }
+
+        setIsLoading(false);
+        router.push('/');
       })}
     >
       <div className="py-5 px-7 flex flex-col lg:w-9/12 xl:w-7/12 2xl:w-6/12 w-full border-4 border-gray-300 rounded-xl">
         <span className="flex xl:flex-row flex-col justify-between items-center gap-3 xl:gap-0">
-          <label className="transition duration-300 hover:bg-gray-200 p-3 rounded-full border-2 border-gray-500">
-            {logo ? (
-              <Image
-                alt={`${logo.name}_logo`}
-                src={URL.createObjectURL(logo)}
-                width={40}
-                height={40}
-              />
-            ) : (
-              <Image
-                alt="default_logo"
-                src={documentSvg}
-                width={40}
-                height={40}
-              />
-            )}
-            <input
-              type="file"
-              name="logo_image"
-              accept="image/*"
-              className="hidden"
-              onChange={(event) => {
-                setLogo(event.target.files?.[0]);
-              }}
-            />
-          </label>
           <input
             {...register('name', {
               required: {
@@ -69,7 +78,7 @@ export default function CreateCard() {
               },
             })}
             type="text"
-            className="text-xl text-black font-semibold border-none outline-none text-center"
+            className="text-xl text-black font-semibold border-none outline-none"
             placeholder="Название продукта"
           />
           <input
@@ -79,7 +88,7 @@ export default function CreateCard() {
                 message: 'Предоставьте ссылку на ваш продукт.',
               },
             })}
-            type="url"
+            type="text"
             className="text-md border-b-2 transition duration-200 focus:border-black outline-none text-gray-500 lg:w-5/12 xl:w-8/12 2xl:w-4/12 text-center"
             placeholder="Ссылка на продукт"
           />
@@ -105,12 +114,12 @@ export default function CreateCard() {
         <span className="flex lg:flex-row flex-col lg:justify-between lg:items-center items-start w-full">
           <span className="flex flex-row gap-3 pb-4 lg:pb-0">
             <Image
-              alt={`${data?.user.name}_logo`}
-              src={data?.user.image as string}
+              alt={`${session?.user.name}_logo`}
+              src={session?.user.image as string}
               width={25}
               height={20}
             />
-            {data?.user.name}
+            {session?.user.name}
           </span>
           <span className="flex flex-row justify-center items-center">
             <h3 className="text-lg font-semibold">Цена:</h3>
@@ -139,9 +148,15 @@ export default function CreateCard() {
           </span>
         ))}
       </div>
-      <Button size="lg" variant="default" type="submit">
-        Создать
-        <CheckCircleIcon className="w-6" />
+      <Button size="lg" variant="default" type="submit" disabled={isLoading}>
+        {isLoading ? 'Загрузка' : 'Создать'}
+        {isLoading ? (
+          <span className="animate-spin">
+            <LoadingIcon />
+          </span>
+        ) : (
+          <CheckCircleIcon className="w-6" />
+        )}
       </Button>
     </form>
   );

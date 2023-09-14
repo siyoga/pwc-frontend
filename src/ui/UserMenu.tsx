@@ -51,7 +51,7 @@ export default function UserMenu({ session }: Props) {
               as={'button'}
               className="transition ease-out duration-200 hover:bg-black hover:text-white px-3 py-2 w-full text-left rounded-lg"
               onClick={() => {
-                router.push(`company/${session.user.id}`);
+                router.push(`/company/${session.user.id}`);
               }}
             >
               Моя страница

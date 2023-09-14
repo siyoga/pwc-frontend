@@ -2,7 +2,7 @@ import { Tag } from './Tag';
 
 export interface Card {
   id: string;
-  companyId: string;
+  companyOwner: string;
   name: string;
   logoLink: string;
   linkToWebsite: string;
@@ -10,5 +10,7 @@ export interface Card {
   description: string;
   approved: string;
   tags: Tag[];
+  deletedAt: string;
+  isDel: number;
   views: number;
 }

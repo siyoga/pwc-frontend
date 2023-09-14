@@ -14,7 +14,7 @@ export interface Company extends User {
   linkToCompany: string;
   viaGoogle: boolean;
   refreshToken: RefreshToken;
-  cards: Card[] | null;
+  cards: Card[];
 }
 
 export interface CompanyUpdatableParams {

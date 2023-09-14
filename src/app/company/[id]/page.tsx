@@ -1,10 +1,16 @@
+import { authOptions } from 'app/api/auth/[...nextauth]/route';
+import { getCardsByCompany } from 'app/api/card';
 import { getCompanyInfo } from 'app/api/company';
 import plusSvg from 'public/plus.svg';
 import plainUserSvg from 'public/user.svg';
+import { Card } from 'types/Card';
+import CardMini from 'ui/CardMini';
 import { Button } from 'ui/components/Button';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { getServerSession } from 'next-auth';
+import uuid from 'react-uuid';
 
 interface Props {
   params: {
@@ -14,6 +20,8 @@ interface Props {
 
 export default async function Page({ params }: Props) {
   const company = await getCompanyInfo(params.id);
+  const session = await getServerSession(authOptions);
+  const cards = (await getCardsByCompany(params.id)) as Card[];
 
   if (!company) {
     return (
@@ -23,8 +31,10 @@ export default async function Page({ params }: Props) {
     );
   }
 
+  console.log(company.cards);
+
   return (
-    <div className="w-full sm:w-5/12 px-7 sm:px-0">
+    <div className="w-full sm:w-6/12 px-7 sm:px-0">
       <div className="flex flex-row justify-between items-center gap-4 rounded-full w-full pb-8">
         <Image
           alt={`${company.id}-logo`}
@@ -42,12 +52,18 @@ export default async function Page({ params }: Props) {
           </Link>
         </span>
       </div>
-      <span className="flex flex-row justify-between items-start gap-2 w-full px-4">
+      <span className="flex flex-row justify-between items-start gap-2 w-full px-4 pb-4">
         <h2 className="text-lg font-semibold">Продукты</h2>
-        <Link href="/card/create">
-          <Image alt="add-img" src={plusSvg} />
-        </Link>
+        {session?.user.id === company.id && (
+          <Link href="/card/create">
+            <Image alt="add-img" src={plusSvg} />
+          </Link>
+        )}
       </span>
+      <div className="grid grid-cols-2 gap-3">
+        {cards.length !== 0 &&
+          cards.map((card) => <CardMini key={uuid()} card={card} />)}
+      </div>
     </div>
   );
 }

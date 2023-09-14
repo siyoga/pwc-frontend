@@ -12,8 +12,9 @@ import { authOptions } from './api/auth/[...nextauth]/route';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Frontend Boilerplate',
-  description: 'Made with love by siyoga',
+  title: 'Pay with crypto',
+  description:
+    'Подборка цифровых продуктов, где вы можете расплачиваться криптовалютой.',
 };
 
 export default async function RootLayout({
@@ -27,7 +28,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <header className="absolute flex flex-row items-center justify-between px-12 py-8 w-full">
-          <span>Frontend Boilerplate</span>
+          <Link href="/">Pay with crypto</Link>
           {!session ? (
             <span>
               <Link
