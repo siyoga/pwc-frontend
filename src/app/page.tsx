@@ -17,11 +17,11 @@ export default async function Home() {
   }
 
   return (
-    <div className="w-full sm:w-9/12 flex flex-col">
+    <div className="w-full lg:w-11/12 xl:w-10/12 flex flex-col">
       <h1 className="font-bold text-2xl w-full text-start border-b-4 pb-3 border-black border-spacing-4">
         Популярное
       </h1>
-      <div className="grid grid-cols-3 gap-3 pt-5">
+      <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3 pt-5">
         {cards.map((card) => (
           <CardMini key={uuid()} card={card} />
         ))}
