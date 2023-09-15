@@ -64,8 +64,7 @@ export default function CreateCard() {
           return;
         }
 
-        setIsLoading(false);
-        router.push('/');
+        router.push(`/company/${session?.user.id as string}`);
       })}
     >
       <div className="py-5 px-7 flex flex-col lg:w-9/12 xl:w-7/12 2xl:w-6/12 w-full border-4 border-gray-300 rounded-xl">

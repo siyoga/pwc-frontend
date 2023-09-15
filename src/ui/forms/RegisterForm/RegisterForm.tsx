@@ -64,9 +64,7 @@ export default function RegisterForm() {
       return;
     }
 
-    setCompleteStatus('idle');
     update();
-
     router.push(`/company/${response.id}`);
   }, [form, data?.user.accessToken, update, router]);
 
@@ -80,60 +78,65 @@ export default function RegisterForm() {
 
   return (
     <Group selectedIndex={selectedIndex}>
-      <List className="flex flex-row space-x-1 rounded-2xl bg-black py-2 px-2 gap-3 w-11/12 sm:w-5/12">
-        {FORM_STEPS.map((step, index) => {
-          const isSelectable = Object.values(form.steps)
-            .slice(0, index)
-            .every((step) => step.valid);
-
-          const isComplete = Object.values(form.steps)
-            .splice(index, 1)
-            .every((step) => step.value !== '' && step.valid);
-
-          return (
-            // Вынести в отдельный компонент
-            <Tab
-              key={uuid()}
-              disabled={isSelectable === false}
-              className={({ selected }) =>
-                `w-full rounded-xl py-2 px-3 text-base sm:text-lg flex flex-row items-center justify-center gap-2 font-medium text-black focus:outline-none transition duration-300 ${
-                  isComplete ? 'text-green-500' : ''
-                } ${
-                  selected
-                    ? 'bg-white shadow'
-                    : `text-gray-300 hover:bg-white/[0.12] ${
-                        isComplete ? 'hover:text-green-500' : 'hover:text-white'
-                      } disabled:hover:bg-black disabled:hover:text-gray-300`
-                }`
-              }
-              onClick={() => {
-                if (isSelectable) {
-                  setSpecificStep(index);
-                }
-              }}
-            >
-              {isComplete ? <CheckCircleIcon className="w-5" /> : null}{' '}
-              {step.label}
-            </Tab>
-          );
-        })}
-      </List>
       {completeStatus === 'pending' ? (
-        <p>Загрузка</p>
+        <h1 className="text-lg font-semibold">Обновляем ваш профиль...</h1>
       ) : (
-        <Panels className="w-full sm:w-5/12 mt-6 px-12">
-          <Panel>
-            <NameStep onNext={nextStep} />
-          </Panel>
+        <>
+          <List className="flex flex-row space-x-1 rounded-2xl bg-black py-2 px-2 gap-3 w-11/12 sm:w-5/12">
+            {FORM_STEPS.map((step, index) => {
+              const isSelectable = Object.values(form.steps)
+                .slice(0, index)
+                .every((step) => step.valid);
 
-          <Panel>
-            <LinkStep onNext={nextStep} />
-          </Panel>
+              const isComplete = Object.values(form.steps)
+                .splice(index, 1)
+                .every((step) => step.value !== '' && step.valid);
 
-          <Panel>
-            <LogoStep onNext={nextStep} />
-          </Panel>
-        </Panels>
+              return (
+                // Вынести в отдельный компонент
+                <Tab
+                  key={uuid()}
+                  disabled={isSelectable === false}
+                  className={({ selected }) =>
+                    `w-full rounded-xl py-2 px-3 text-base sm:text-lg flex flex-row items-center justify-center gap-2 font-medium text-black focus:outline-none transition duration-300 ${
+                      isComplete ? 'text-green-500' : ''
+                    } ${
+                      selected
+                        ? 'bg-white shadow'
+                        : `text-gray-300 hover:bg-white/[0.12] ${
+                            isComplete
+                              ? 'hover:text-green-500'
+                              : 'hover:text-white'
+                          } disabled:hover:bg-black disabled:hover:text-gray-300`
+                    }`
+                  }
+                  onClick={() => {
+                    if (isSelectable) {
+                      setSpecificStep(index);
+                    }
+                  }}
+                >
+                  {isComplete ? <CheckCircleIcon className="w-5" /> : null}{' '}
+                  {step.label}
+                </Tab>
+              );
+            })}
+          </List>
+
+          <Panels className="w-full sm:w-5/12 mt-6 px-12">
+            <Panel>
+              <NameStep onNext={nextStep} />
+            </Panel>
+
+            <Panel>
+              <LinkStep onNext={nextStep} />
+            </Panel>
+
+            <Panel>
+              <LogoStep onNext={nextStep} />
+            </Panel>
+          </Panels>
+        </>
       )}
     </Group>
   );

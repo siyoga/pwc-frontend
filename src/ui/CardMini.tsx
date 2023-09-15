@@ -38,7 +38,7 @@ export default async function CardMini({ card }: Props) {
                 height={20}
               />
             )}
-            {company.name}
+            <Link href={`/company/${company.id}`} />
           </span>
           <span className="flex flex-row justify-center items-center">
             <h3 className="text-base font-semibold">{card.price}</h3>
