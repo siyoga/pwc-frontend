@@ -24,20 +24,24 @@ export async function uploadCompanyLogo(
 export async function updateCompanyInfo(
   newInfo: CompanyUpdatableParams,
   accessToken: string
-): Promise<Company | false> {
-  const response = await api.post('company/update', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(newInfo),
-  });
+): Promise<Company | false | undefined> {
+  try {
+    const response = await api.post('company/update', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(newInfo),
+    });
 
-  if (!response.ok) {
-    return false;
+    if (!response.ok) {
+      return false;
+    }
+
+    return await response.json<Company>();
+  } catch (error) {
+    console.log(error);
   }
-
-  return await response.json<Company>();
 }
 
 export async function getCompanyInfo(id: string): Promise<Company | false> {
