@@ -41,6 +41,8 @@ export async function login(
   );
 
   if (response.status !== 200) {
+    console.log(await response);
+    console.log(await response.json());
     return false;
   }
 
