@@ -12,6 +12,7 @@ export async function registerViaGoogle(
     {
       method: 'POST',
       headers: {
+        Authorization: `Bearer ${tokenId}`,
         'content-type': 'application/json',
       },
       body: JSON.stringify(creds),
