@@ -1,8 +1,6 @@
 import { Tokens } from 'types/Tokens';
 import { Company, CompanyCredentials } from 'types/User';
 
-import api from '../ky';
-
 export async function registerViaGoogle(
   tokenId: string,
   creds: Omit<CompanyCredentials, 'id'>

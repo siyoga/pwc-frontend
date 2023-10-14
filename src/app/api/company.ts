@@ -10,7 +10,7 @@ export async function uploadCompanyLogo(
   imageInfo.append('companyLogo', image);
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/logo/upload`,
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/company/logo/upload`,
     {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
