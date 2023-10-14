@@ -1,16 +1,15 @@
 import { authOptions } from 'app/api/auth/[...nextauth]/route';
 import { getCardsByCompany } from 'app/api/card';
 import { getCompanyInfo } from 'app/api/company';
-import plusSvg from 'public/plus.svg';
-import plainUserSvg from 'public/user.svg';
-import { Card } from 'types/Card';
-import CardMini from 'ui/CardMini';
-import { Button } from 'ui/components/Button';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
+import plusSvg from 'public/plus.svg';
+import plainUserSvg from 'public/user.svg';
 import uuid from 'react-uuid';
+import { Card } from 'types/Card';
+import CardMini from 'ui/CardMini';
+import { Button } from 'ui/components/Button';
 
 interface Props {
   params: {

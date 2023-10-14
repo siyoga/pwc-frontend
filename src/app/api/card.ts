@@ -1,7 +1,6 @@
+import { HTTPError } from 'ky';
 import { Card } from 'types/Card';
 import { Error } from 'types/Error';
-
-import { HTTPError } from 'ky';
 
 import api from './ky';
 
@@ -24,7 +23,7 @@ export async function getCardsByCompany(
   return (await response.json()) as Card[];
 }
 
-export async function getAllCards(): Promise<Card[] | Error> {
+export async function getAllCards(): Promise<Card[] | false> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/card/get/all`,
     {
@@ -33,7 +32,7 @@ export async function getAllCards(): Promise<Card[] | Error> {
   );
 
   if (response.status !== 200) {
-    return (await response.json()) as Error;
+    return false;
   }
 
   return (await response.json()) as Card[];

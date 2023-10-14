@@ -9,39 +9,43 @@ export async function uploadCompanyLogo(
   const imageInfo = new FormData();
   imageInfo.append('companyLogo', image);
 
-  const response = await api.post('company/logo/upload', {
-    headers: { Authorization: `Bearer ${accessToken}` },
-    body: imageInfo,
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/logo/upload`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: imageInfo,
+    }
+  );
 
-  if (!response.ok) {
+  if (response.status !== 200) {
     return false;
   }
 
-  return await response.json<Company>();
+  return await response.json();
 }
 
 export async function updateCompanyInfo(
   newInfo: CompanyUpdatableParams,
   accessToken: string
-): Promise<Company | false | undefined> {
-  try {
-    const response = await api.post('company/update', {
+): Promise<Company | false> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/company/update`,
+    {
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'content-type': 'application/json',
       },
       body: JSON.stringify(newInfo),
-    });
-
-    if (!response.ok) {
-      return false;
     }
+  );
 
-    return await response.json<Company>();
-  } catch (error) {
-    console.log(error);
+  if (response.status !== 200) {
+    return false;
   }
+
+  return await response.json();
 }
 
 export async function getCompanyInfo(id: string): Promise<Company | false> {
