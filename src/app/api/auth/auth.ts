@@ -19,9 +19,7 @@ export async function registerViaGoogle(
     }
   );
 
-  if (response.status !== 201) {
-    console.log(await response);
-    console.log(await response.json());
+  if (response.status !== 201 && response.status !== 200) {
     return false;
   }
 
