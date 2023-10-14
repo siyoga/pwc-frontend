@@ -28,11 +28,15 @@ export const authOptions: NextAuthOptions = {
             { viaGoogle: true, email: user.email as string }
           );
 
+          console.log(registerResponse);
+
           if (!registerResponse) {
             return '/unauthorized';
           }
 
           const loginResponse = await login({ email: registerResponse.email });
+
+          console.log(loginResponse);
 
           if (!loginResponse) {
             return '/unauthorized';
