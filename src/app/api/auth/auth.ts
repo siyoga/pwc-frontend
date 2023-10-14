@@ -7,62 +7,77 @@ export async function registerViaGoogle(
   tokenId: string,
   creds: Omit<CompanyCredentials, 'id'>
 ): Promise<Company | false> {
-  const registerResponse = await api.post('auth/register', {
-    headers: {
-      Authorization: `Bearer ${tokenId}`,
-      'content-type': 'application/json',
-    },
-    json: {
-      ...creds,
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/auth/register`,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(creds),
+    }
+  );
 
-  if (registerResponse.status !== 200 && registerResponse.status !== 201) {
+  if (response.status !== 201) {
     return false;
   }
 
-  return await registerResponse.json<Company>();
+  return await response.json();
 }
 
 export async function login(
-  credentials: Omit<CompanyCredentials, 'id' | 'viaGoogle'>
+  creds: Omit<CompanyCredentials, 'id' | 'viaGoogle'>
 ): Promise<Tokens | false> {
-  const response = await api.post('auth/login', {
-    body: JSON.stringify(credentials),
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/auth/login`,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(creds),
+    }
+  );
 
-  if (response.status === 400) {
+  if (response.status !== 200) {
     return false;
   }
 
-  return await response.json<Tokens>();
+  return await response.json();
 }
 
 export async function refresh(refreshToken: string): Promise<Tokens | false> {
-  const response = await api.get('auth/refresh', {
-    headers: {
-      Authorization: `Bearer: ${refreshToken}`,
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/auth/refresh`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer: ${refreshToken}`,
+      },
+    }
+  );
 
-  if (!response.ok) {
+  if (response.status !== 200) {
     return false;
   }
 
-  return await response.json<Tokens>();
+  return await response.json();
 }
 
 export async function whoAmI(accessToken: string): Promise<Company | false> {
-  const response = await api.get('auth/whoami', {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/auth/whoami`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer: ${accessToken}`,
+      },
+    }
+  );
 
-  if (!response.ok) {
+  if (response.status !== 200) {
     return false;
   }
 
-  return await response.json<Company>();
+  return await response.json();
 }
