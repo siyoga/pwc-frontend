@@ -20,6 +20,7 @@ export async function registerViaGoogle(
   );
 
   if (response.status !== 201 && response.status !== 200) {
+    console.log('register');
     console.log(response);
     console.log(await response.json());
     return false;
@@ -43,6 +44,7 @@ export async function login(
   );
 
   if (response.status !== 200) {
+    console.log('login');
     console.log(response);
     console.log(await response.json());
     return false;
